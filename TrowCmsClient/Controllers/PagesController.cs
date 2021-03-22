@@ -12,14 +12,17 @@ namespace TrowCmsClient.Controllers
 {
     public class PagesController : Controller
     {
+        private const String ApiUrl = "https://localhost:44348/api/pages"; // TrowCmsAPI url entered here
+
         // GET pages
         public async Task<IActionResult> Index()
         {
             List<Page> pages = new List<Page>();
+            
 
             using (var httpClient = new HttpClient())
             {
-                using var request = await httpClient.GetAsync("https://localhost:44348/api/pages"); //enter the TrowCmsAPI url here
+                using var request = await httpClient.GetAsync(ApiUrl); //enter the TrowCmsAPI url here
                 string response = await request.Content.ReadAsStringAsync();
                 pages = JsonConvert.DeserializeObject<List<Page>>(response);
             }
@@ -34,7 +37,7 @@ namespace TrowCmsClient.Controllers
 
             using (var httpClient = new HttpClient())
             {
-                using var request = await httpClient.GetAsync($"https://localhost:44348/api/pages/{id}"); //enter the TrowCmsAPI url with {id} here
+                using var request = await httpClient.GetAsync($"{ApiUrl}/{id}"); //enter the TrowCmsAPI url with {id} here
                 string response = await request.Content.ReadAsStringAsync();
 
                 page = JsonConvert.DeserializeObject<Page>(response);
@@ -52,7 +55,7 @@ namespace TrowCmsClient.Controllers
             using (var httpClient = new HttpClient())
             {
                 var content = new StringContent(JsonConvert.SerializeObject(page), Encoding.UTF8, "application/json");
-                using var request = await httpClient.PutAsync($"https://localhost:44348/api/pages/{page.Id}", content); //enter the TrowCmsAPI url with {id} here
+                using var request = await httpClient.PutAsync($"{ApiUrl}/{page.Id}", content); //enter the TrowCmsAPI url with {id} here
                 string response = await request.Content.ReadAsStringAsync();
             }
 
@@ -72,7 +75,7 @@ namespace TrowCmsClient.Controllers
             using (var httpClient = new HttpClient())
             {
                 var content = new StringContent(JsonConvert.SerializeObject(page), Encoding.UTF8, "application/json");
-                using var request = await httpClient.PostAsync($"https://localhost:44348/api/pages", content);
+                using var request = await httpClient.PostAsync($"{ApiUrl}", content);
                 string response = await request.Content.ReadAsStringAsync();
             }
 
@@ -84,7 +87,7 @@ namespace TrowCmsClient.Controllers
         {
             using (var httpClient = new HttpClient())
             {
-                using var request = await httpClient.DeleteAsync($"https://localhost:44348/api/pages/{id}");
+                using var request = await httpClient.DeleteAsync($"{ApiUrl}/{id}");
             }
 
             return RedirectToAction("Index");
